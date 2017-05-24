@@ -1,5 +1,6 @@
 package sample;
 
+import classes.NeuralReader;
 import classes.Parser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,16 +25,7 @@ import static nn.data.ImgBrightnessMapper.map;
 public class TrainingWindowController {
 
     @FXML
-    private TableColumn<TrainingView, String> nameColumn;
-
-    @FXML
-    private TableColumn<TrainingView, TextField> valueColumn;
-
-    @FXML
-    private TableView trainingTable;
-
-    @FXML
-    private TextField depthField;
+    private Button chooseButton;
 
     @FXML
     private Button chooseXButton;
@@ -84,24 +76,14 @@ public class TrainingWindowController {
     @FXML
     public void initialize() {
 
-        trainingTable.setEditable(true);
-
-        nameColumn.setCellValueFactory(new PropertyValueFactory<TrainingView, String>("name"));
-        valueColumn.setCellValueFactory(new PropertyValueFactory<TrainingView, TextField>("value"));
-
-        depthField.textProperty().addListener((observable, oldValue, newValue) -> {
-            depth = Integer.parseInt(newValue);
-            if (newValue.equals(""))
-                newValue = "0";
-            trainingProperties.removeAll();
-            trainingProperties.clear();
-            trainingProperties.add(new TrainingView("Input", ""));
-            for (int i = 0; i < depth - 2; i++) {
-                trainingProperties.add(new TrainingView("Size " + i, ""));
+        chooseButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open NN File");
+                File file = fileChooser.showOpenDialog(new Stage());
+                nn = (DeepFeedForwardNN) NeuralReader.getReader().start(file);
             }
-            trainingProperties.add(new TrainingView("Output", ""));
-            trainingTable.setItems(trainingProperties);
-
         });
 
         criteriaField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -179,14 +161,6 @@ public class TrainingWindowController {
                         images[i][j] = map(imgs[i][j]);
                     }
                 }
-
-                int[] sizes = new int[depth];
-
-                for (int i = 0; i < depth; i++) {
-                    sizes[i] = Integer.parseInt(valueColumn.getCellObservableValue(i).getValue().getText());
-                }
-
-                nn = new DeepFeedForwardNN(depth, sizes);
                 DFFNNTrainer trainer = new DFFNNTrainer(nn, images, lbls);
                 //trainer.trainTimeBound(maxSteps, stepLength, maxTime);
                 trainer.trainSimple(maxSteps, (int) stepLength);

@@ -41,4 +41,16 @@ public class MainController {
         stage.setScene(scene);
         stage.show();
     }
+
+    @FXML
+    public void goToCreateView() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("nnConstructor.fxml"));
+        AnchorPane load = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Constructing View");
+        Scene scene = new Scene(load);
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }

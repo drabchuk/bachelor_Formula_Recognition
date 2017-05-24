@@ -6,13 +6,12 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TrainingWindowController">
    <children>
-      <TextField fx:id="depthField" layoutX="72.0" layoutY="33.0" prefHeight="25.0" prefWidth="33.0" />
-      <TableView fx:id="trainingTable" layoutX="27.0" layoutY="82.0" prefHeight="200.0" prefWidth="155.0">
-        <columns>
-          <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
-          <TableColumn fx:id="valueColumn" prefWidth="75.0" text="Value" />
-        </columns>
-      </TableView>
+
+      <Button fx:id="chooseButton" layoutX="190.0" layoutY="64.0" mnemonicParsing="false" text="Choose file" />
+      <Label layoutX="34.0" layoutY="28.0" text="Load NN" />
+      <TextField editable="false" layoutX="34.0" layoutY="64.0" />
+      <Button layoutX="32.0" layoutY="100.0" mnemonicParsing="false" text="Load" />
+
       <Button fx:id="saveNN" layoutX="330.0" layoutY="338.0" mnemonicParsing="false" text="Save as" />
       <Button fx:id="chooseYButton" layoutX="263.0" layoutY="86.0" mnemonicParsing="false" text="Choose file" />
       <Button fx:id="chooseXButton" layoutX="263.0" layoutY="50.0" mnemonicParsing="false" text="Choose file" />
