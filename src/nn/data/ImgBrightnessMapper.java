@@ -12,7 +12,7 @@ public class ImgBrightnessMapper {
         } else {
             res = ((double) brightness + 256.0) / 256.0;
         }
-        return res;
+        return 1.0 - res;
     }
 
 }

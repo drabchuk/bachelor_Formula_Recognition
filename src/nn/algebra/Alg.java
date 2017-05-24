@@ -1,5 +1,7 @@
 package nn.algebra;
 
+import org.jblas.DoubleMatrix;
+
 import java.util.Random;
 
 /**
@@ -20,6 +22,13 @@ public abstract class Alg {
     }
 
     public static double[][] mult(double[][] a, double[][] b) throws IllegalArgumentException {
+        DoubleMatrix aBlas = new DoubleMatrix(a);
+        DoubleMatrix bBlas = new DoubleMatrix(b);
+        DoubleMatrix c = aBlas.mmul(bBlas);
+        return c.toArray2();
+    }
+
+    /*public static double[][] mult(double[][] a, double[][] b) throws IllegalArgumentException {
         int h = a.length;
         int w = b[0].length;
         int la = a[0].length;
@@ -39,7 +48,7 @@ public abstract class Alg {
             }
         }
         return res;
-    }
+    }*/
 
     public static double[][] mult(double[][] a, double[][] b, String transpose) throws IllegalArgumentException {
         int h = a.length;
@@ -415,6 +424,15 @@ public abstract class Alg {
         double[] res = new double[len - 1];
         System.arraycopy(to, 1, res, 0, len - 1);
         return res;
+    }
+
+    public static double squaredNorm(double[] v) {
+        double sum = 0.0;
+        int size = v.length;
+        for (int i = 0; i < size; i++) {
+            sum += Math.pow(v[i], 2);
+        }
+        return sum;
     }
 
 }

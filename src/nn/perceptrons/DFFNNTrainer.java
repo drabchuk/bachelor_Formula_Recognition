@@ -11,8 +11,6 @@ import static nn.algebra.Alg.sub;
  * Created by Denis on 04.04.2017.
  */
 public class DFFNNTrainer extends NNTrainer {
-
-    private int gradientDescentSteps = 10;
     private DeepFeedForwardNN nn;
 
     public DFFNNTrainer(DeepFeedForwardNN nn, double[][] tx, double[][] ty) {
@@ -32,7 +30,7 @@ public class DFFNNTrainer extends NNTrainer {
     public void trainSimple(int maxSteps, int dichotomyAccuracy) {
         Function f = new NNFunc(this);
         Partan optimizer = new Partan(f);
-        double[] min = optimizer.optimizeSimple(maxSteps, dichotomyAccuracy);
+        double[] min = optimizer.optimizeCG(maxSteps, dichotomyAccuracy);
         this.setTheta(min);
     }
 
@@ -168,11 +166,6 @@ public class DFFNNTrainer extends NNTrainer {
         }
         sum /= tdLen;
         return sum;
-    }
-
-    @Override
-    public void setAccuracy(double accuracy) {
-        gradientDescentSteps = (int) accuracy;
     }
 
 }

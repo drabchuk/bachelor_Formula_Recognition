@@ -1,6 +1,9 @@
 package sample;
 
+import static classes.Const.*;
+
 import classes.CustomImage;
+import classes.JPGParser;
 import classes.Parser;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -35,16 +38,9 @@ public class Controller {
     @FXML
     private javafx.scene.control.TextField resultError;
 
-
-    private File imgFile;
-    private Desktop desktop = Desktop.getDesktop();
-
     private NeuralNetwork nn;
     private byte[][] imgs;
     private byte[] labels;
-
-    final static int WIDTH = 28;
-    final static int HEIGHT = 28;
 
 
     @FXML
@@ -64,11 +60,8 @@ public class Controller {
         chooseXButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Open X File");
-                File file = fileChooser.showOpenDialog(new Stage());
                 try {
-                    imgs = Parser.parseX(new RandomAccessFile(file, "rw"));
+                    imgs = JPGParser.parseXTest();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -79,11 +72,8 @@ public class Controller {
         chooseYButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Open Y File");
-                File file = fileChooser.showOpenDialog(new Stage());
                 try {
-                    labels = Parser.parseY(new RandomAccessFile(file, "rw"));
+                    labels = JPGParser.parseYTest();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -94,17 +84,17 @@ public class Controller {
             @Override
             public void handle(MouseEvent event) {
                 // CODE FOR TEST BUTTON
-                double[] prediction = new double[10];
-                double[] example = new double[784];
+                double[] prediction = new double[LABELS_SIZE];
+                double[] example = new double[IMG_BYTES];
                 double sumError = 0.;
                 for (int i = 0; i < imgs.length; i++) {
-                    for (int j = 0; j < 784; j++) {
+                    for (int j = 0; j < IMG_BYTES; j++) {
                         example[j] = map(imgs[i][j]);
                     }
                     prediction = nn.predict(example);
                     int maxId = 0;
                     double maxNum = 0.0;
-                    for (int j = 0; j < 10; j++) {
+                    for (int j = 0; j < LABELS_SIZE; j++) {
                         if (maxNum < prediction[j]) {
                             maxNum = prediction[j];
                             maxId = j;
@@ -120,9 +110,9 @@ public class Controller {
         nextImgButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                byte[][] pixels = new byte[HEIGHT][WIDTH];
-                for (int i = 0; i < HEIGHT; i++) {
-                    for (int j = 0; j < WIDTH; j++) {
+                byte[][] pixels = new byte[IMG_WIDTH][IMG_WIDTH];
+                for (int i = 0; i < IMG_WIDTH; i++) {
+                    for (int j = 0; j < IMG_WIDTH; j++) {
                         pixels[i][j] = (byte) i;
                     }
                 }
@@ -130,22 +120,21 @@ public class Controller {
                 CustomImage customImg = new CustomImage(imgs[imgNum]);
                 randomDidgitImg.setImage(customImg.getWritableImage());
 
-                double[] example = new double[784];
+                double[] example = new double[IMG_BYTES];
 
-                for (int j = 0; j < 784; j++) {
+                for (int j = 0; j < IMG_BYTES; j++) {
                     example[j] = map(imgs[imgNum][j]);
                 }
                 double[] prediction = nn.predict(example);
                 int maxId = 0;
                 double maxNum = 0.0;
-                for (int j = 0; j < 10; j++) {
+                for (int j = 0; j < LABELS_SIZE; j++) {
                     if (maxNum < prediction[j]) {
                         maxNum = prediction[j];
                         maxId = j;
                     }
                 }
-                recognizedLabel.setText(String.valueOf(maxId)
-                );
+                recognizedLabel.setText(PAC_NAME[maxId]);
 
             }
         });

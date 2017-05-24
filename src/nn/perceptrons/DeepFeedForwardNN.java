@@ -4,9 +4,11 @@ import static nn.algebra.Alg.*;
 
 import nn.NeuralNetwork;
 import classes.NeuralWriter;
+import org.jblas.DoubleMatrix;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created by Denis on 30.03.2017.
@@ -34,7 +36,7 @@ public class DeepFeedForwardNN extends NeuralNetwork {
 
     /**
      * return z [0] and a [1]
-     * */
+     */
     public double[][][] forwardPropagation(double[] features) {
         double[][][] za = new double[2][depth][];
         double[] a = features;
@@ -60,8 +62,28 @@ public class DeepFeedForwardNN extends NeuralNetwork {
         }
         return a;
     }
-
     @Override
+    public double[][] predict(double[][] features) {
+        DoubleMatrix a = new DoubleMatrix(features);
+        double[] ones;
+        DoubleMatrix onesDM;
+
+
+        //DoubleMatrix r = DoubleMatrix.concatHorizontally(new DoubleMatrix(ones), dm);
+        for (int i = 0; i < depth - 1; i++) {
+            ones = new double[a.rows];
+            Arrays.fill(ones, 1.0);
+            onesDM = new DoubleMatrix(ones);
+            a = DoubleMatrix.concatHorizontally(onesDM, a);
+            DoubleMatrix thet = new DoubleMatrix(theta[i]);
+            DoubleMatrix z = a.mmul(thet.transpose());
+            a = new DoubleMatrix(sigmoid(z.toArray2()));
+        }
+
+        return a.toArray2();
+    }
+
+    /*@Override
     public double[][] predict(double[][] features) {
         double[][] res = new double[features.length][];
         for (int j = 0; j < features.length; j++) {
@@ -75,7 +97,7 @@ public class DeepFeedForwardNN extends NeuralNetwork {
         }
 
         return res;
-    }
+    }*/
 
     @Override
     public void saveWeights(File file) throws IOException {

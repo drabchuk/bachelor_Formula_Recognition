@@ -20,23 +20,42 @@ public class Partan {
         System.out.println("partan constructor initialized");
     }
 
-    public double[] optimizeSimple(int steps, int dichotomyAccuracy) {
-        double[] node1 = x.clone();
+    public double[] optimizeCG(int steps, int dichotomyAccuracy) {
+        double squaredNormPrevious;
+        double[] previousGradient;
+        double squaredNormThis;
         double[] point;
-        System.out.println("optimization using simple gradient descent with dichotomy started");
-        point = node1.clone();
+        double[] direction;
+        double w;
+        double directionStep;
+        System.out.println("optimization using CG with dichotomy started");
+        point = x.clone();
         System.out.println("cost : " + f.cost(point));
+        grad = f.grad(point);
+        squaredNormPrevious = squaredNorm(grad);
+        sven(1.0, grad, point);
+        System.out.println("sven completed");
+        directionStep = dichotomy(dichotomyAccuracy, grad, point);
+        System.out.println("dichotomy completed");
+        point = sum(point, dotMult(directionStep, grad));
+        System.out.println("cost : " + f.cost(point));
+        previousGradient = grad.clone();
         for (int d = 0; d < steps; d++) {
             System.out.println(d + "/" + steps);
-            System.out.println("gradient descent");
+            System.out.println("gradient");
             grad = f.grad(point);
-            System.out.println("gradient descent completed");
-            sven(1.0, grad, point);
+            squaredNormThis = squaredNorm(grad);
+            System.out.println("gradient computed");
+            w = squaredNormThis / squaredNormPrevious;
+            direction = sub(dotMult(w, previousGradient), grad);
+            sven(1.0, direction, point);
             System.out.println("sven completed");
-            double directionStep = dichotomy(dichotomyAccuracy, grad, point);
+            directionStep = dichotomy(dichotomyAccuracy, direction, point);
             System.out.println("dichotomy completed");
-            point = sum(point, dotMult(directionStep, grad));
+            point = sum(point, dotMult(directionStep, direction));
             System.out.println("cost : " + f.cost(point));
+            previousGradient = grad.clone();
+            squaredNormPrevious = squaredNormThis;
         }
         return point;
     }

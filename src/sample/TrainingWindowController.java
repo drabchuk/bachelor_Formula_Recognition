@@ -1,5 +1,8 @@
 package sample;
 
+import static classes.Const.*;
+
+import classes.JPGParser;
 import classes.NeuralReader;
 import classes.Parser;
 import javafx.collections.FXCollections;
@@ -111,35 +114,24 @@ public class TrainingWindowController {
             maxTime = Integer.parseInt(newValue);
         });
 
-        chooseYButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Open Y File");
-                try {
-                    loadYStatus.setText("loading...");
-                    File file = new File(fileChooser.showOpenDialog(new Stage()).toURI());
-                    labels = Parser.parseY(new RandomAccessFile(file, "rw"));
-                    loadYStatus.setText(file.getName());
-                } catch (IOException e) {
-                    loadYStatus.setText("fail");
-                    e.printStackTrace();
-                }
-            }
-        });
-
         chooseXButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Open X File");
                 try {
-                    loadXStatus.setText("loading...");
-                    File file = new File(fileChooser.showOpenDialog(new Stage()).toURI());
-                    imgs = Parser.parseX(new RandomAccessFile(file, "rw"));
-                    loadXStatus.setText(file.getName());
+                    imgs = JPGParser.parseX();
                 } catch (IOException e) {
-                    loadXStatus.setText("fail");
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        chooseYButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    labels = JPGParser.parseY();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -151,13 +143,13 @@ public class TrainingWindowController {
 
                 learningStatus.setText("Learning started");
 
-                double[][] lbls = new double[labels.length][10];
+                double[][] lbls = new double[labels.length][LABELS_SIZE];
                 for (int i = 0; i < labels.length; i++) {
                     lbls[i][labels[i]] = 1.;
                 }
-                double[][] images = new double[imgs.length][784];
+                double[][] images = new double[imgs.length][IMG_BYTES];
                 for (int i = 0; i < imgs.length; i++) {
-                    for (int j = 0; j < 784; j++) {
+                    for (int j = 0; j < IMG_BYTES; j++) {
                         images[i][j] = map(imgs[i][j]);
                     }
                 }
