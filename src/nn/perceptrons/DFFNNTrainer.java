@@ -27,10 +27,10 @@ public class DFFNNTrainer extends NNTrainer {
     }
 
     @Override
-    public void trainSimple(int maxSteps, int dichotomyAccuracy) {
+    public void trainSimple(int maxSteps, int dichotomyAccuracy, int minutes) {
         Function f = new NNFunc(this);
         Partan optimizer = new Partan(f);
-        double[] min = optimizer.optimizeCG(maxSteps, dichotomyAccuracy);
+        double[] min = optimizer.optimizeCG(maxSteps, dichotomyAccuracy, minutes);
         this.setTheta(min);
     }
 

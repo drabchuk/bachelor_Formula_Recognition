@@ -155,7 +155,7 @@ public class TrainingWindowController {
                 }
                 DFFNNTrainer trainer = new DFFNNTrainer(nn, images, lbls);
                 //trainer.trainTimeBound(maxSteps, stepLength, maxTime);
-                trainer.trainSimple(maxSteps, (int) stepLength);
+                trainer.trainSimple(maxSteps, (int) stepLength, maxTime);
                 System.out.println("Learning completed.");
                 learningStatus.setText("Learning completed.");
 

@@ -11,7 +11,7 @@ public interface Const {
     int IMG_BYTES = IMG_WIDTH * IMG_WIDTH;
 
     String[] PAC_NAME = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-            "-", "(", ")", "+", "div", "e", "log", "pi", "sin", "sqrt",
+            "-", "(", ")", "+", "div", "e", "log", "pi", "sin", "cos",
             "tan", "times", "u", "v", "x", "y", "z"};
 
     int LABELS_SIZE = PAC_NAME.length;

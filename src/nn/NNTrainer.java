@@ -14,7 +14,7 @@ public abstract class NNTrainer {
     }
 
     public abstract void train(int maxSteps, int dichotomyAccuracy);
-    public abstract void trainSimple(int maxSteps, int dichotomyAccuracy);
+    public abstract void trainSimple(int maxSteps, int dichotomyAccuracy, int minutes);
 
     public void setTx(double[][] tx) {
         this.tx = tx;
